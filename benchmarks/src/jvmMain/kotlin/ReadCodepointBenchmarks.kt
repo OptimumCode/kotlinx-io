@@ -61,10 +61,9 @@ open class ReadCodepointBenchmarks {
 
     @Benchmark
     fun readCodepointsFromBuffer(blackhole: Blackhole) {
-        var index = 0
         val cp = buffer.peek()
-        while (!cp.exhausted()) {
-            codepoints[index++] = cp.readCodePointValue()
+        repeat(size) {
+            codepoints[it] = cp.readCodePointValue()
         }
         blackhole.consume(codepoints)
     }
