@@ -10,7 +10,7 @@ import kotlinx.io.Buffer
 import kotlinx.io.readCodePointValue
 import kotlinx.io.readString
 import kotlinx.io.readTo
-import kotlinx.io.readUtf8WithLimit
+import kotlinx.io.readStringWithLimit
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -71,6 +71,6 @@ open class ReadCodepointBenchmarks {
 
     @Benchmark
     fun readStringWithLimit(blackhole: Blackhole) {
-        blackhole.consume(buffer.peek().readUtf8WithLimit(size.toLong() - 1))
+        blackhole.consume(buffer.peek().readStringWithLimit(size.toLong() - 1))
     }
 }

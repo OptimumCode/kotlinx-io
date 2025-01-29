@@ -8,28 +8,28 @@ class Utf8WithByteLimitTest {
     @Test
     fun `reads empty string from empty buffer`() {
         val buffer = Buffer()
-        assertEquals("", buffer.readUtf8WithLimit(1024))
+        assertEquals("", buffer.readStringWithLimit(1024))
     }
 
     @Test
     fun `reads ascii string from buffer`() {
         val buffer = Buffer()
         buffer.writeString("abc")
-        assertEquals("abc", buffer.readUtf8WithLimit(1024))
+        assertEquals("abc", buffer.readStringWithLimit(1024))
     }
 
     @Test
     fun `reads 2 bytes unicode string from buffer`() {
         val buffer = Buffer()
         buffer.writeString("абв")
-        assertEquals("абв", buffer.readUtf8WithLimit(1024))
+        assertEquals("абв", buffer.readStringWithLimit(1024))
     }
 
     @Test
     fun `reads 3 bytes unicode string from buffer`() {
         val buffer = Buffer()
         buffer.writeString("੨੩੪")
-        assertEquals("੨੩੪", buffer.readUtf8WithLimit(1024))
+        assertEquals("੨੩੪", buffer.readStringWithLimit(1024))
     }
 
     @Test
@@ -39,14 +39,14 @@ class Utf8WithByteLimitTest {
         // https://www.compart.com/en/unicode/U+10302
         val buffer = Buffer()
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
-        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readUtf8WithLimit(1024))
+        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readStringWithLimit(1024))
     }
 
     @Test
     fun `reads ascii string from buffer up to the limit`() {
         val buffer = Buffer()
         buffer.writeString("abcdefghijklmnop")
-        assertEquals("abc", buffer.readUtf8WithLimit(3))
+        assertEquals("abc", buffer.readStringWithLimit(3))
     }
 
     @Test
@@ -55,29 +55,29 @@ class Utf8WithByteLimitTest {
         // 5 bytes is a half of the 3rd letter
         val buffer = Buffer()
         buffer.writeString("абвгдежзиклмн")
-        assertEquals("аб", buffer.readUtf8WithLimit(5))
+        assertEquals("аб", buffer.readStringWithLimit(5))
     }
 
     @Test
     fun `reads 2 bytes unicode string from buffer up to the limit less than size of one codepoint`() {
         val buffer = Buffer()
         buffer.writeString("абвгдежзиклмн")
-        assertEquals("", buffer.readUtf8WithLimit(1))
+        assertEquals("", buffer.readStringWithLimit(1))
     }
 
     @Test
     fun `reads 3 bytes unicode string from buffer up to the limit`() {
         val buffer = Buffer()
         buffer.writeString("੨੩੪੨੩੪")
-        assertEquals("੨", buffer.readUtf8WithLimit(4))
+        assertEquals("੨", buffer.readStringWithLimit(4))
     }
 
     @Test
     fun `reads 3 bytes unicode string from buffer up to the limit less than size of one codepoint`() {
         val buffer = Buffer()
         buffer.writeString("੨੩੪੨੩੪")
-        assertEquals("", buffer.readUtf8WithLimit(2))
-        assertEquals("", buffer.readUtf8WithLimit(1))
+        assertEquals("", buffer.readStringWithLimit(2))
+        assertEquals("", buffer.readStringWithLimit(1))
     }
 
     @Test
@@ -87,7 +87,7 @@ class Utf8WithByteLimitTest {
         // https://www.compart.com/en/unicode/U+10302
         val buffer = Buffer()
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
-        assertEquals("\uD800\uDF00", buffer.readUtf8WithLimit(5))
+        assertEquals("\uD800\uDF00", buffer.readStringWithLimit(5))
     }
 
     @Test
@@ -97,19 +97,19 @@ class Utf8WithByteLimitTest {
         // https://www.compart.com/en/unicode/U+10302
         val buffer = Buffer()
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
-        assertEquals("", buffer.readUtf8WithLimit(3))
-        assertEquals("", buffer.readUtf8WithLimit(2))
-        assertEquals("", buffer.readUtf8WithLimit(1))
+        assertEquals("", buffer.readStringWithLimit(3))
+        assertEquals("", buffer.readStringWithLimit(2))
+        assertEquals("", buffer.readStringWithLimit(1))
     }
 
     @Test
     fun `reads ascii string from buffer up to the limit continuously`() {
         val buffer = Buffer()
         buffer.writeString("abcdefgh")
-        assertEquals("abc", buffer.readUtf8WithLimit(3))
-        assertEquals("def", buffer.readUtf8WithLimit(3))
-        assertEquals("gh", buffer.readUtf8WithLimit(3))
-        assertEquals("", buffer.readUtf8WithLimit(3))
+        assertEquals("abc", buffer.readStringWithLimit(3))
+        assertEquals("def", buffer.readStringWithLimit(3))
+        assertEquals("gh", buffer.readStringWithLimit(3))
+        assertEquals("", buffer.readStringWithLimit(3))
     }
 
     @Test
@@ -118,20 +118,20 @@ class Utf8WithByteLimitTest {
         // 5 bytes is a half of the 3rd letter
         val buffer = Buffer()
         buffer.writeString("абвгд")
-        assertEquals("аб", buffer.readUtf8WithLimit(5))
-        assertEquals("вг", buffer.readUtf8WithLimit(5))
-        assertEquals("д", buffer.readUtf8WithLimit(5))
-        assertEquals("", buffer.readUtf8WithLimit(3))
+        assertEquals("аб", buffer.readStringWithLimit(5))
+        assertEquals("вг", buffer.readStringWithLimit(5))
+        assertEquals("д", buffer.readStringWithLimit(5))
+        assertEquals("", buffer.readStringWithLimit(3))
     }
 
     @Test
     fun `reads 3 bytes unicode string from buffer up to the limit continuously`() {
         val buffer = Buffer()
         buffer.writeString("੨੩੪")
-        assertEquals("੨", buffer.readUtf8WithLimit(4))
-        assertEquals("੩", buffer.readUtf8WithLimit(4))
-        assertEquals("੪", buffer.readUtf8WithLimit(4))
-        assertEquals("", buffer.readUtf8WithLimit(4))
+        assertEquals("੨", buffer.readStringWithLimit(4))
+        assertEquals("੩", buffer.readStringWithLimit(4))
+        assertEquals("੪", buffer.readStringWithLimit(4))
+        assertEquals("", buffer.readStringWithLimit(4))
     }
 
     @Test
@@ -141,34 +141,34 @@ class Utf8WithByteLimitTest {
         // https://www.compart.com/en/unicode/U+10302
         val buffer = Buffer()
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
-        assertEquals("\uD800\uDF00", buffer.readUtf8WithLimit(4))
-        assertEquals("\uD800\uDF01", buffer.readUtf8WithLimit(4))
-        assertEquals("\uD800\uDF02", buffer.readUtf8WithLimit(4))
-        assertEquals("", buffer.readUtf8WithLimit(4))
+        assertEquals("\uD800\uDF00", buffer.readStringWithLimit(4))
+        assertEquals("\uD800\uDF01", buffer.readStringWithLimit(4))
+        assertEquals("\uD800\uDF02", buffer.readStringWithLimit(4))
+        assertEquals("", buffer.readStringWithLimit(4))
     }
 
     @Test
     fun `reads mix of unicode and ascii from buffer`() {
         val buffer = Buffer()
         buffer.writeString("abcабв")
-        assertEquals("abcабв", buffer.readUtf8WithLimit(1024))
+        assertEquals("abcабв", buffer.readStringWithLimit(1024))
     }
 
     @Test
     fun `reads mix of unicode and ascii from buffer up to the limit`() {
         val buffer = Buffer()
         buffer.writeString("aяbюcэ")
-        assertEquals("aя", buffer.readUtf8WithLimit(3))
+        assertEquals("aя", buffer.readStringWithLimit(3))
     }
 
     @Test
     fun `reads mix of unicode and ascii from buffer up to the limit continuously`() {
         val buffer = Buffer()
         buffer.writeString("aяbюcэ")
-        assertEquals("aя", buffer.readUtf8WithLimit(3))
-        assertEquals("bю", buffer.readUtf8WithLimit(3))
-        assertEquals("cэ", buffer.readUtf8WithLimit(3))
-        assertEquals("", buffer.readUtf8WithLimit(3))
+        assertEquals("aя", buffer.readStringWithLimit(3))
+        assertEquals("bю", buffer.readStringWithLimit(3))
+        assertEquals("cэ", buffer.readStringWithLimit(3))
+        assertEquals("", buffer.readStringWithLimit(3))
     }
 
     @Test
@@ -179,7 +179,7 @@ class Utf8WithByteLimitTest {
         val result = buildString {
             while (true) {
                 // the odd limit to read half of the original bytes
-                val read = buffer.readUtf8WithLimit(1021)
+                val read = buffer.readStringWithLimit(1021)
                 if (read.isEmpty()) break
                 append(read)
             }
@@ -195,10 +195,10 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("def")
 
-        assertEquals("abc", buffer.readUtf8WithLimit(3))
-        assertEquals("�de", buffer.readUtf8WithLimit(3))
-        assertEquals("f", buffer.readUtf8WithLimit(3))
-        assertEquals("", buffer.readUtf8WithLimit(3))
+        assertEquals("abc", buffer.readStringWithLimit(3))
+        assertEquals("�de", buffer.readStringWithLimit(3))
+        assertEquals("f", buffer.readStringWithLimit(3))
+        assertEquals("", buffer.readStringWithLimit(3))
     }
 
     @Test
@@ -208,9 +208,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("def")
 
-        assertEquals("abc�", buffer.readUtf8WithLimit(4))
-        assertEquals("def", buffer.readUtf8WithLimit(4))
-        assertEquals("", buffer.readUtf8WithLimit(4))
+        assertEquals("abc�", buffer.readStringWithLimit(4))
+        assertEquals("def", buffer.readStringWithLimit(4))
+        assertEquals("", buffer.readStringWithLimit(4))
     }
 
     @Test
@@ -221,9 +221,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("def")
 
-        assertEquals("abc�", buffer.readUtf8WithLimit(4))
-        assertEquals("�def", buffer.readUtf8WithLimit(4))
-        assertEquals("", buffer.readUtf8WithLimit(4))
+        assertEquals("abc�", buffer.readStringWithLimit(4))
+        assertEquals("�def", buffer.readStringWithLimit(4))
+        assertEquals("", buffer.readStringWithLimit(4))
     }
 
     @Test
@@ -233,9 +233,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("где")
 
-        assertEquals("абв�", buffer.readUtf8WithLimit(7))
-        assertEquals("где", buffer.readUtf8WithLimit(7))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("абв�", buffer.readStringWithLimit(7))
+        assertEquals("где", buffer.readStringWithLimit(7))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -246,9 +246,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("где")
 
-        assertEquals("абв�", buffer.readUtf8WithLimit(7))
-        assertEquals("�где", buffer.readUtf8WithLimit(7))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("абв�", buffer.readStringWithLimit(7))
+        assertEquals("�где", buffer.readStringWithLimit(7))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -258,9 +258,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("੨੩੪")
 
-        assertEquals("੨੩੪�", buffer.readUtf8WithLimit(10))
-        assertEquals("੨੩੪", buffer.readUtf8WithLimit(10))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("੨੩੪�", buffer.readStringWithLimit(10))
+        assertEquals("੨੩੪", buffer.readStringWithLimit(10))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -271,9 +271,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("੨੩੪")
 
-        assertEquals("੨੩੪�", buffer.readUtf8WithLimit(10))
-        assertEquals("�੨੩੪", buffer.readUtf8WithLimit(10))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("੨੩੪�", buffer.readStringWithLimit(10))
+        assertEquals("�੨੩੪", buffer.readStringWithLimit(10))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -286,9 +286,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
 
-        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02�", buffer.readUtf8WithLimit(13))
-        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readUtf8WithLimit(13))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02�", buffer.readStringWithLimit(13))
+        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readStringWithLimit(13))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -302,9 +302,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeString("\uD800\uDF00\uD800\uDF01\uD800\uDF02")
 
-        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02�", buffer.readUtf8WithLimit(13))
-        assertEquals("�\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readUtf8WithLimit(13))
-        assertEquals("", buffer.readUtf8WithLimit(7))
+        assertEquals("\uD800\uDF00\uD800\uDF01\uD800\uDF02�", buffer.readStringWithLimit(13))
+        assertEquals("�\uD800\uDF00\uD800\uDF01\uD800\uDF02", buffer.readStringWithLimit(13))
+        assertEquals("", buffer.readStringWithLimit(7))
     }
 
     @Test
@@ -315,9 +315,9 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeByte(0xBB.toByte())
 
-        assertEquals("��", buffer.readUtf8WithLimit(2))
-        assertEquals("��", buffer.readUtf8WithLimit(2))
-        assertEquals("", buffer.readUtf8WithLimit(2))
+        assertEquals("��", buffer.readStringWithLimit(2))
+        assertEquals("��", buffer.readStringWithLimit(2))
+        assertEquals("", buffer.readStringWithLimit(2))
     }
 
     @Test
@@ -330,8 +330,8 @@ class Utf8WithByteLimitTest {
         buffer.writeByte(0xBB.toByte())
         buffer.writeByte(0xBB.toByte())
 
-        assertEquals("�����", buffer.readUtf8WithLimit(5))
-        assertEquals("�", buffer.readUtf8WithLimit(2))
-        assertEquals("", buffer.readUtf8WithLimit(2))
+        assertEquals("�����", buffer.readStringWithLimit(5))
+        assertEquals("�", buffer.readStringWithLimit(2))
+        assertEquals("", buffer.readStringWithLimit(2))
     }
 }

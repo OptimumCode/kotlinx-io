@@ -625,7 +625,7 @@ private fun Buffer.commonReadUtf8(byteCount: Long): String {
 /**
  * @return a well-formed (if possible) UTF8 string with a size at most [limitBytes]
  */
-public fun Source.readUtf8WithLimit(limitBytes: Long): String {
+public fun Source.readStringWithLimit(limitBytes: Long): String {
     val fullUtf8Size = sizeOfFullValidUtf8String(limitBytes)
     val buffer = readString(fullUtf8Size)
     return buffer
