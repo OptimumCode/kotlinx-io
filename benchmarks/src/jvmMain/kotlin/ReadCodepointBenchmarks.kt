@@ -10,6 +10,7 @@ import kotlinx.io.Buffer
 import kotlinx.io.readCodePointValue
 import kotlinx.io.readString
 import kotlinx.io.readTo
+import kotlinx.io.readUtf8WithLimit
 import java.io.BufferedReader
 import java.io.ByteArrayInputStream
 import java.io.InputStreamReader
@@ -30,19 +31,19 @@ open class ReadCodepointBenchmarks {
     fun setup() {
         buffer = Buffer()
         repeat(size) {
-            buffer.writeByte(('a'..'z').random().code.toByte())
+            buffer.writeByte(('а'..'я').random().code.toByte())
         }
         jvmBuffer = BufferedReader(InputStreamReader(ByteArrayInputStream(buffer.copy().readString().toByteArray())))
 
-        dest = ByteArray(size)
-        jvmDest = CharArray(size)
-        codepoints = IntArray(size)
+        dest = ByteArray(size - 1)
+        jvmDest = CharArray(size - 1)
+        codepoints = IntArray(size - 1)
     }
 
 
     @Benchmark
     fun readStringFromBuffer(blackhole: Blackhole) {
-        blackhole.consume(buffer.peek().readString(size.toLong()))
+        blackhole.consume(buffer.peek().readString(size.toLong() - 1))
     }
 
     @Benchmark
@@ -62,9 +63,14 @@ open class ReadCodepointBenchmarks {
     @Benchmark
     fun readCodepointsFromBuffer(blackhole: Blackhole) {
         val cp = buffer.peek()
-        repeat(size) {
+        repeat(size - 1) {
             codepoints[it] = cp.readCodePointValue()
         }
         blackhole.consume(codepoints)
+    }
+
+    @Benchmark
+    fun readStringWithLimit(blackhole: Blackhole) {
+        blackhole.consume(buffer.peek().readUtf8WithLimit(size.toLong() - 1))
     }
 }
